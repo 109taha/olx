@@ -8,7 +8,8 @@ const upload = require('../helper/multer')
 //controller
 const { createUser, loginUser, logoutUser, deleteUser, findUserById } = require('../contorller/user');
 const { createProduct, findAllProducts, findProductById, updateProduct, deleteProduct, findUserProducts } = require('../contorller/products');
-const { createMobileAdd } = require("../contorller/mobilePhone")
+const { createMobileAdd } = require("../contorller/mobilePhone");
+const { createCarAdd } = require('../contorller/car');
 
 //users
 router.post('/register', createUser);
@@ -35,6 +36,10 @@ router.delete('/delete/:productId', verifyuser, deleteProduct);
 
 //Mobile phone
 router.post('/createMobile', verifyuser, upload.array("attachArtwork", 20), createMobileAdd);
+
+
+//car
+router.post('/createCar', verifyuser, upload.array("attachArtwork", 20), createCarAdd);
 
 
 module.exports = router;
