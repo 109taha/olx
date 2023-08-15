@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const mobilephoneSchema = new mongoose.Schema({
+const MobilePhoneSchema = new mongoose.Schema({
     seller_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -18,13 +18,23 @@ const mobilephoneSchema = new mongoose.Schema({
         type: String,
         require: true,
         enum: [
+            "Apple",
             "Samsung",
-            "LG",
-            "QMobile",
-            "Motorola",
-            "Nokia",
-            "Huawei",
+            "Google",
+            "OnePlus",
+            "Tecno",
+            "Infinix",
             "Xiaomi",
+            "Realme",
+            "Nokia",
+            "Motorola",
+            "BlackBerry",
+            "LG",
+            "Asus",
+            "Acer",
+            "Sony",
+            "QMobile",
+            "Huawei",
             "Vivo",
             "BLU",
             "Alcatel",
@@ -32,21 +42,10 @@ const mobilephoneSchema = new mongoose.Schema({
             "Oppo",
             "Micromax",
             "HTC",
+            "Honor",
             "Lenovo",
             "Celkon",
-            "Asus",
-            "Philips",
-            "Realme",
-            "Honor",
-            "Sony Ericsson",
-            "Sony",
-            "Infinix",
-            "Tecno",
-            "Apple",
-            "Acer",
-            "BlackBerry",
-            "OnePlus",
-            "Google"
+            "Philips"
         ]
     },
     condition: {
@@ -68,7 +67,7 @@ const mobilephoneSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-const Mobile = mongoose.model('Mobile-Phone', mobilephoneSchema);
+const Mobile = mongoose.model('Mobile-Phone', MobilePhoneSchema);
 
 module.exports = {
     Mobile,
