@@ -3,6 +3,7 @@ const router = express.Router();
 
 //middleware
 const verifyuser = require("../middlewares/verifyUser")
+const upload = require('../helper/multer')
 
 //controller
 const { createUser, loginUser, logoutUser, deleteUser, findUserById } = require('../contorller/user');
@@ -33,7 +34,7 @@ router.delete('/delete/:productId', verifyuser, deleteProduct);
 
 
 //Mobile phone
-router.post('/createMobile', verifyuser, createMobileAdd);
+router.post('/createMobile', verifyuser, upload.array("attachArtwork", 20), createMobileAdd);
 
 
 module.exports = router;

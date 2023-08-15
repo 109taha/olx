@@ -65,6 +65,10 @@ const MobilePhoneSchema = new mongoose.Schema({
         require: true,
         type: String,
     },
+    pics: {
+        type: Array,
+        require: true
+    }
 }, { timestamps: true });
 
 const Mobile = mongoose.model('Mobile-Phone', MobilePhoneSchema);
