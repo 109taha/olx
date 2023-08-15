@@ -10,6 +10,7 @@ const { createUser, loginUser, logoutUser, deleteUser, findUserById } = require(
 const { createProduct, findAllProducts, findProductById, updateProduct, deleteProduct, findUserProducts } = require('../contorller/products');
 const { createMobileAdd } = require("../contorller/mobilePhone");
 const { createCarAdd } = require('../contorller/car');
+const { createbikeAdd } = require('../contorller/bike');
 
 //users
 router.post('/register', createUser);
@@ -41,5 +42,8 @@ router.post('/createMobile', verifyuser, upload.array("attachArtwork", 20), crea
 //car
 router.post('/createCar', verifyuser, upload.array("attachArtwork", 20), createCarAdd);
 
+
+//bike
+router.post('/createBike', verifyuser, upload.array("attachArtwork", 20), createbikeAdd);
 
 module.exports = router;
