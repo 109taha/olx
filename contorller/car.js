@@ -120,9 +120,7 @@ const findAllCar = async (req, res) => {
 };
 const findCarById = async (req, res) => {
   try {
-    console.log("123");
     const mobileId = req.params.mobileId;
-    console.log(mobileId);
     const product = await Car.findById(mobileId);
     if (product.length === 0) {
       return res.status(400).send({
@@ -139,7 +137,7 @@ const findCarById = async (req, res) => {
   }
 };
 
-const findUserMobiles = async (req, res) => {
+const findUserCar = async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -163,4 +161,4 @@ const findUserMobiles = async (req, res) => {
   }
 };
 
-module.exports = { createCarAdd, findAllCar, findCarById };
+module.exports = { createCarAdd, findAllCar, findCarById, findUserCar };

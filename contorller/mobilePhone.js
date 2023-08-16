@@ -122,9 +122,6 @@ const findUserMobiles = async (req, res) => {
   }
 };
 
-// Export the function to be used as a route handler
-module.exports = findUserMobiles;
-
 module.exports = {
   createMobileAdd,
   findAllMobiles,

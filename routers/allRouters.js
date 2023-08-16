@@ -27,29 +27,31 @@ const {
   findMobileById,
   findUserMobiles,
 } = require("../contorller/mobilePhone");
-const { createCarAdd, findAllCar, findCarById } = require("../contorller/car");
-const { createbikeAdd } = require("../contorller/bike");
+const {
+  createCarAdd,
+  findAllCar,
+  findCarById,
+  findUserCar,
+} = require("../contorller/car");
+const {
+  createbikeAdd,
+  findUserBike,
+  findBikeById,
+  findAllbike,
+} = require("../contorller/bike");
 
 //users
 router.post("/createUser", createUser);
-
 router.post("/loginUser", loginUser);
-
 router.get("/findUserById/:userId", findUserById);
-
 router.delete("/deleteUser/:userId", deleteUser);
 
 //products
 router.post("/createProduct", verifyuser, createProduct);
-
 router.get("/findAllProducts", findAllProducts);
-
 router.get("/findProductById/:productId", findProductById);
-
 router.put("/updateProduct/:productId", updateProduct);
-
 router.get("/findUserProducts/:userId", findUserProducts);
-
 router.delete("/deleteProduct/:productId", verifyuser, deleteProduct);
 
 //Mobile phone
@@ -60,9 +62,7 @@ router.post(
   createMobileAdd
 );
 router.get("/findAllMobiles", findAllMobiles);
-
 router.get("/findMobileById/:mobileId", findMobileById);
-
 router.get("/findUserMobiles/:userId", findUserMobiles);
 
 //car
@@ -73,7 +73,8 @@ router.post(
   createCarAdd
 );
 router.get("/findAllCar", findAllCar);
-// router.get("/findCarById/:Id", findCarById);
+router.get("/findCarById/:mobileId", findCarById);
+router.get("/findUserCar/:userId", findUserCar);
 
 //bike
 router.post(
@@ -82,5 +83,8 @@ router.post(
   upload.array("attachArtwork", 20),
   createbikeAdd
 );
+router.get("/findAllbike", findAllbike);
+router.get("/findBikeById/:mobileId", findBikeById);
+router.get("/findUserBike/:userId", findUserBike);
 
 module.exports = router;
