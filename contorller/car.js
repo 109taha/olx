@@ -72,6 +72,7 @@ const createCarAdd = async (req, res) => {
 
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
+    const name = users.first_name + " " + users.last_name;
     const product = new Car({
       seller_id: userId,
       title,
@@ -89,7 +90,6 @@ const createCarAdd = async (req, res) => {
       condition,
       price,
       location,
-      contact_Number,
       pics: attachArtwork.map((x) => x.url),
     });
 
@@ -100,9 +100,12 @@ const createCarAdd = async (req, res) => {
       product_type: "Car",
     });
     await products.save();
-    res
-      .status(200)
-      .send({ message: "product added successfully", data: product });
+    res.status(200).send({
+      message: "product added successfully",
+      data: product,
+      Seller_Name: name,
+      Seller_Number: contact_Number,
+    });
   } catch (error) {
     return res.status(500).send({ message: "something went wrong" });
   }
