@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models/user");
 const cloudinary = require("../helper/cloudinary");
 const fs = require("fs");
+const { Product } = require("../models/product");
 
 const createCarAdd = async (req, res) => {
   const files = req.files;
@@ -93,6 +94,12 @@ const createCarAdd = async (req, res) => {
     });
 
     await product.save();
+    const products = new Product({
+      seller_id: product.seller_id,
+      product_id: product._id,
+      product_type: "Car",
+    });
+    await products.save();
     res
       .status(200)
       .send({ message: "product added successfully", data: product });
@@ -225,6 +232,19 @@ const deleteCar = async (req, res) => {
     return res.status(500).send({ message: "An error occurred" });
   }
 };
+const serchFeildCar = async (req, res) => {
+  try {
+    const searchfield = req.params.title;
+    const data = await Car.find({
+      title: { $regex: searchfield, $options: "i" },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error while searching for products:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 module.exports = {
   createCarAdd,
@@ -233,4 +253,5 @@ module.exports = {
   findUserCar,
   updateCar,
   deleteCar,
+  serchFeildCar,
 };
