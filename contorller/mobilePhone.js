@@ -92,13 +92,19 @@ const findMobileById = async (req, res) => {
   try {
     const mobileId = req.params.mobileId;
     const product = await Mobile.findById(mobileId);
-    if (product.length === 0) {
+    const userId = product.seller_id.toString();
+    const user = await User.findById(userId);
+    const name = user.first_name + " " + user.last_name;
+    const number = user.phone_number;
+    if (!product) {
       return res.status(400).send({
         message: "no Mobile found on that Id",
       });
     }
     res.status(200).send({
       data: product,
+      seller_Name: name,
+      seller_Contact: number,
     });
   } catch (error) {
     return res.status(500).send({
