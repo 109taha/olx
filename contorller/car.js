@@ -71,7 +71,6 @@ const createCarAdd = async (req, res) => {
 
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
-    console.log(contact_Number);
     const product = new Car({
       seller_id: userId,
       title,
@@ -104,7 +103,6 @@ const createCarAdd = async (req, res) => {
 
 const findAllCar = async (req, res) => {
   try {
-    console.log("123");
     const products = await Car.find();
     if (!products) {
       return res.status(400).send({
@@ -161,4 +159,78 @@ const findUserCar = async (req, res) => {
   }
 };
 
-module.exports = { createCarAdd, findAllCar, findCarById, findUserCar };
+const updateCar = async (req, res) => {
+  try {
+    const updateData = req.body;
+    const productId = req.params.productId;
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
+
+    // Check if the user has the right to update this product
+    const product = await Car.findById(productId);
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+    if (product.seller_id.toString() !== userId) {
+      return res.status(403).send({
+        message: "You are not allowed to update this product",
+      });
+    }
+
+    const updatedProduct = await Car.findByIdAndUpdate(productId, updateData, {
+      new: true,
+    });
+
+    if (!updatedProduct) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+
+    return res.status(200).send({ data: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "An error occurred" });
+  }
+};
+const deleteCar = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
+
+    const product = await Car.findById(productId);
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+    if (product.seller_id.toString() !== userId) {
+      return res.status(403).send({
+        message: "You are not allowed to delete this product",
+      });
+    }
+
+    await Car.findByIdAndDelete(productId);
+
+    return res.status(200).send({
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "An error occurred" });
+  }
+};
+
+module.exports = {
+  createCarAdd,
+  findAllCar,
+  findCarById,
+  findUserCar,
+  updateCar,
+  deleteCar,
+};

@@ -4,7 +4,6 @@ const { Product } = require("../models/product");
 const createProduct = async (req, res) => {
   try {
     const { title, description, category, price, status, location } = req.body;
-    // console.log(req.body)
 
     if (!title || !description || !category || !price || !status || !location) {
       return res.status(400).send({ message: "All fields are required" });
@@ -46,7 +45,6 @@ const findAllProducts = async (req, res) => {
 const findProductById = async (req, res) => {
   try {
     const productId = req.params.productId;
-    console.log(productId);
     const product = await Product.findById(productId);
     if (product.length === 0) {
       return res.status(400).send({

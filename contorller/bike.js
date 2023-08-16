@@ -59,7 +59,6 @@ const createbikeAdd = async (req, res) => {
 
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
-    console.log(contact_Number);
     const product = new Bike({
       seller_id: userId,
       title,
@@ -86,7 +85,6 @@ const createbikeAdd = async (req, res) => {
 
 const findAllbike = async (req, res) => {
   try {
-    console.log("123");
     const products = await Bike.find();
     if (!products) {
       return res.status(400).send({
@@ -142,5 +140,78 @@ const findUserBike = async (req, res) => {
     });
   }
 };
+const updateBike = async (req, res) => {
+  try {
+    const updateData = req.body;
+    const productId = req.params.productId;
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
 
-module.exports = { createbikeAdd, findAllbike, findBikeById, findUserBike };
+    // Check if the user has the right to update this product
+    const product = await Bike.findById(productId);
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+    if (product.seller_id.toString() !== userId) {
+      return res.status(403).send({
+        message: "You are not allowed to update this product",
+      });
+    }
+
+    const updatedProduct = await Bike.findByIdAndUpdate(productId, updateData, {
+      new: true,
+    });
+
+    if (!updatedProduct) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+
+    return res.status(200).send({ data: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "An error occurred" });
+  }
+};
+const deleteBike = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
+
+    const product = await Bike.findById(productId);
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+    if (product.seller_id.toString() !== userId) {
+      return res.status(403).send({
+        message: "You are not allowed to delete this product",
+      });
+    }
+
+    await Bike.findByIdAndDelete(productId);
+
+    return res.status(200).send({
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "An error occurred" });
+  }
+};
+
+module.exports = {
+  createbikeAdd,
+  findAllbike,
+  findBikeById,
+  findUserBike,
+  updateBike,
+  deleteBike,
+};

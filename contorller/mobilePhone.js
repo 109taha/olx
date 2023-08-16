@@ -28,7 +28,6 @@ const createMobileAdd = async (req, res) => {
         console.log(err);
       }
     }
-    console.log(attachArtwork.map((x) => x.url));
     const { title, description, brand, condition, price, location } = req.body;
     if (!title || !description || !brand || !condition || !price || !location) {
       return res.status(400).send({ message: "All fields are required" });
@@ -64,7 +63,6 @@ const createMobileAdd = async (req, res) => {
 
 const findAllMobiles = async (req, res) => {
   try {
-    console.log("123");
     const products = await Mobile.find();
     if (!products) {
       return res.status(400).send({
@@ -81,7 +79,6 @@ const findAllMobiles = async (req, res) => {
 const findMobileById = async (req, res) => {
   try {
     const mobileId = req.params.mobileId;
-    console.log(mobileId);
     const product = await Mobile.findById(mobileId);
     if (product.length === 0) {
       return res.status(400).send({
@@ -122,9 +119,80 @@ const findUserMobiles = async (req, res) => {
   }
 };
 
+const updateMobile = async (req, res) => {
+  try {
+    const updateData = req.body;
+    const productId = req.params.productId;
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
+
+    // Check if the user has the right to update this product
+    const product = await Mobile.findById(productId);
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+    if (product.seller_id.toString() !== userId) {
+      return res.status(403).send({
+        message: "You are not allowed to update this product",
+      });
+    }
+
+    const updatedProduct = await Mobile.findByIdAndUpdate(
+      productId,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+
+    return res.status(200).send({ data: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "An error occurred" });
+  }
+};
+const deleteMobile = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
+
+    const product = await Mobile.findById(productId);
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+    if (product.seller_id.toString() !== userId) {
+      return res.status(403).send({
+        message: "You are not allowed to delete this product",
+      });
+    }
+
+    await Mobile.findByIdAndDelete(productId);
+
+    return res.status(200).send({
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "An error occurred" });
+  }
+};
+
 module.exports = {
   createMobileAdd,
   findAllMobiles,
   findMobileById,
   findUserMobiles,
+  updateMobile,
+  deleteMobile,
 };
