@@ -11,7 +11,8 @@ const createUser = async (req, res) => {
       first_name,
       last_name,
       phone_number,
-      location,
+      latitude,
+      longitude,
     } = req.body;
     if (
       !username ||
@@ -20,7 +21,8 @@ const createUser = async (req, res) => {
       !first_name ||
       !last_name ||
       !phone_number ||
-      !location
+      !latitude ||
+      !longitude
     ) {
       return res.status(400).send({ message: "All fields are required" });
     }
@@ -45,7 +47,13 @@ const createUser = async (req, res) => {
       first_name,
       last_name,
       phone_number,
-      location,
+      location: {
+        type: "Point",
+        coordinates: [
+          parseFloat(req.body.longitude),
+          parseFloat(req.body.latitude),
+        ],
+      },
     });
 
     await user.save();

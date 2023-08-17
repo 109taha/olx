@@ -44,7 +44,8 @@ const createCarAdd = async (req, res) => {
       features,
       condition,
       price,
-      location,
+      latitude,
+      longitude,
     } = req.body;
     if (
       !title ||
@@ -61,7 +62,8 @@ const createCarAdd = async (req, res) => {
       !features ||
       !condition ||
       !price ||
-      !location
+      !latitude ||
+      !longitude
     ) {
       return res.status(400).send({ message: "All fields are required" });
     }
@@ -89,7 +91,13 @@ const createCarAdd = async (req, res) => {
       features,
       condition,
       price,
-      location,
+      location: {
+        type: "Point",
+        coordinates: [
+          parseFloat(req.body.longitude),
+          parseFloat(req.body.latitude),
+        ],
+      },
       pics: attachArtwork.map((x) => x.url),
     });
 

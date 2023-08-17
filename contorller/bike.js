@@ -38,7 +38,8 @@ const createbikeAdd = async (req, res) => {
       KMsDriven,
       condition,
       price,
-      location,
+      latitude,
+      longitude,
     } = req.body;
     if (
       !title ||
@@ -49,7 +50,8 @@ const createbikeAdd = async (req, res) => {
       !KMsDriven ||
       !condition ||
       !price ||
-      !location
+      !latitude ||
+      !longitude
     ) {
       return res.status(400).send({ message: "All fields are required" });
     }
@@ -71,7 +73,13 @@ const createbikeAdd = async (req, res) => {
       KMsDriven,
       condition,
       price,
-      location,
+      location: {
+        type: "Point",
+        coordinates: [
+          parseFloat(req.body.longitude),
+          parseFloat(req.body.latitude),
+        ],
+      },
       pics: attachArtwork.map((x) => x.url),
     });
 

@@ -95,8 +95,8 @@ const BikeSchema = new mongoose.Schema(
       required: true,
     },
     location: {
-      type: String,
-      required: true,
+      type: { type: String, require: true },
+      coordinates: [],
     },
     pics: {
       type: Array,

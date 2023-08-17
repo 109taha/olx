@@ -41,7 +41,12 @@ const {
   deleteBike,
   serchFeildBike,
 } = require("../contorller/bike");
-const { findAllProduct, findAll, search } = require("../contorller/products");
+const {
+  findAllProduct,
+  findAll,
+  search,
+  findnearest,
+} = require("../contorller/products");
 
 //users
 router.post("/createUser", createUser);
@@ -53,6 +58,7 @@ router.delete("/deleteUser/:userId", deleteUser);
 router.get("/findAllProduct", findAllProduct);
 router.get("/finding", findAll);
 router.get("/search/:title", search);
+router.get("/findnearest", verifyuser, findnearest);
 
 //Mobile phone
 router.post(

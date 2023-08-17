@@ -29,8 +29,16 @@ const createMobileAdd = async (req, res) => {
         console.log(err);
       }
     }
-    const { title, description, brand, condition, price, location } = req.body;
-    if (!title || !description || !brand || !condition || !price || !location) {
+    const { title, description, brand, condition, price, latitude, longitude } =
+      req.body;
+    if (
+      !title ||
+      !description ||
+      !brand ||
+      !condition ||
+      !latitude ||
+      !longitude
+    ) {
       return res.status(400).send({ message: "All fields are required" });
     }
 
@@ -49,7 +57,13 @@ const createMobileAdd = async (req, res) => {
       brand,
       condition,
       price,
-      location,
+      location: {
+        type: "Point",
+        coordinates: [
+          parseFloat(req.body.longitude),
+          parseFloat(req.body.latitude),
+        ],
+      },
       pics: attachArtwork.map((x) => x.url),
     });
 
