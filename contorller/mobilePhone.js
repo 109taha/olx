@@ -79,8 +79,6 @@ const createMobileAdd = async (req, res) => {
       pics: attachArtwork.map((x) => x.url),
     });
 
-    await product.save();
-
     console.log(product.isFeatured);
     if (product.isFeatured === true) {
       const scheduledJob = cron.schedule("* * */10 * *", async () => {
@@ -101,6 +99,12 @@ const createMobileAdd = async (req, res) => {
         }
       });
     }
+    const userData = await Product.find({ seller_id: product.seller_id });
+    if (userData.length >= 4) {
+      return res
+        .status(400)
+        .send({ message: "you are not allow to create 5th ad" });
+    }
 
     const products = new Product({
       seller_id: product.seller_id,
@@ -108,6 +112,7 @@ const createMobileAdd = async (req, res) => {
       product_type: "Mobile",
     });
     await products.save();
+    await product.save();
 
     res.status(200).send({
       message: "product added successfully",
@@ -122,7 +127,10 @@ const createMobileAdd = async (req, res) => {
 
 const findAllMobiles = async (req, res) => {
   try {
-    const products = await Mobile.find();
+    const products = await Mobile.find({}).sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
     if (!products) {
       return res.status(400).send({
         message: "No mobile-Phone Found",

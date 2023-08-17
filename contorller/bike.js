@@ -87,9 +87,7 @@ const createbikeAdd = async (req, res) => {
       },
       pics: attachArtwork.map((x) => x.url),
     });
-    await product.save();
 
-    console.log(product.isFeatured);
     if (product.isFeatured === true) {
       const scheduledJob = cron.schedule("* * */10 * *", async () => {
         try {
@@ -108,12 +106,19 @@ const createbikeAdd = async (req, res) => {
         }
       });
     }
+    const userData = await Product.find({ seller_id: product.seller_id });
+    if (userData.length >= 4) {
+      return res
+        .status(400)
+        .send({ message: "you are not allow to create 5th ad" });
+    }
 
     const products = new Product({
       seller_id: product.seller_id,
       product_id: product._id,
       product_type: "Bike",
     });
+    await product.save();
     await products.save();
 
     res.status(200).send({
@@ -133,7 +138,6 @@ const findAllbike = async (req, res) => {
       isFeatured: -1,
       createdAt: -1,
     });
-    console.log(products);
     if (!products) {
       return res.status(400).send({
         message: "No Cars Found",

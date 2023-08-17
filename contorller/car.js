@@ -105,7 +105,6 @@ const createCarAdd = async (req, res) => {
       },
       pics: attachArtwork.map((x) => x.url),
     });
-    await product.save();
 
     console.log(product.isFeatured);
     if (product.isFeatured === true) {
@@ -127,12 +126,19 @@ const createCarAdd = async (req, res) => {
         }
       });
     }
+    const userData = await Product.find({ seller_id: product.seller_id });
+    if (userData.length >= 4) {
+      return res
+        .status(400)
+        .send({ message: "you are not allow to create 5th ad" });
+    }
 
     const products = new Product({
       seller_id: product.seller_id,
       product_id: product._id,
       product_type: "Car",
     });
+    await product.save();
     await products.save();
     res.status(200).send({
       message: "product added successfully",
@@ -147,7 +153,10 @@ const createCarAdd = async (req, res) => {
 
 const findAllCar = async (req, res) => {
   try {
-    const products = await Car.find();
+    const products = await Car.find({}).sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
     if (!products) {
       return res.status(400).send({
         message: "No Cars Found",
