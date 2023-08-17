@@ -22,6 +22,7 @@ const {
   deleteMobile,
   updateMobile,
   serchFeildMobile,
+  findnearestmobile,
 } = require("../contorller/mobilePhone");
 const {
   createCarAdd,
@@ -31,6 +32,7 @@ const {
   updateCar,
   deleteCar,
   serchFeildCar,
+  findnearestcar,
 } = require("../contorller/car");
 const {
   createbikeAdd,
@@ -40,6 +42,7 @@ const {
   updateBike,
   deleteBike,
   serchFeildBike,
+  findnearestbike,
 } = require("../contorller/bike");
 const {
   findAllProduct,
@@ -47,6 +50,7 @@ const {
   search,
   findnearest,
 } = require("../contorller/products");
+const { verify } = require("jsonwebtoken");
 
 //users
 router.post("/createUser", createUser);
@@ -73,6 +77,7 @@ router.get("/findUserMobiles/:userId", findUserMobiles);
 router.put("/updateMoile/:productId", verifyuser, updateMobile);
 router.delete("/deleteMobile/:productId", verifyuser, deleteMobile);
 router.get("/mobile/:title", serchFeildMobile);
+router.get("/findnearestmobile", verifyuser, findnearestmobile);
 
 //car
 router.post(
@@ -87,6 +92,7 @@ router.get("/findUserCar/:userId", findUserCar);
 router.put("/updateCar/:productId", verifyuser, updateCar);
 router.delete("/deleteCar/:productId", verifyuser, deleteCar);
 router.get("/car/:title", serchFeildCar);
+router.get("/findnearestcar", verifyuser, findnearestcar);
 
 //bike
 router.post(
@@ -101,5 +107,6 @@ router.get("/findUserBike/:userId", findUserBike);
 router.put("/updateBike/:productId", verifyuser, updateBike);
 router.delete("/deleteBike/:productId", verifyuser, deleteBike);
 router.get("/bike/:title", serchFeildBike);
+router.get("/findnearestbike", verifyuser, findnearestbike);
 
 module.exports = router;

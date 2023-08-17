@@ -247,7 +247,33 @@ const serchFeildBike = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const findnearestbike = async (req, res) => {
+  try {
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
+    const userData = await User.findById(userId);
+    // console.log(userData.location);
+    const latitude = userData.location.coordinates[1]; // Latitude is at index 1
+    const longitude = userData.location.coordinates[0];
+    console.log("latitude:", latitude, "longitude:", longitude);
 
+    const option = {
+      location: {
+        $geoWithin: {
+          $centerSphere: [[longitude, latitude], 15 / 3962.2],
+        },
+      },
+    };
+    const bikes = await Bike.find(option);
+    res.status(200).send(bikes);
+  } catch (err) {
+    res.status(500).send({
+      message: "Internal server error",
+      err,
+    });
+  }
+};
 module.exports = {
   createbikeAdd,
   findAllbike,
@@ -256,4 +282,5 @@ module.exports = {
   updateBike,
   deleteBike,
   serchFeildBike,
+  findnearestbike,
 };

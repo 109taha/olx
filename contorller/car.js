@@ -263,7 +263,33 @@ const serchFeildCar = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const findnearestcar = async (req, res) => {
+  try {
+    const user = req.headers.authorization.split(" ")[1];
+    const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
+    const userId = decryptedToken.userId;
+    const userData = await User.findById(userId);
+    // console.log(userData.location);
+    const latitude = userData.location.coordinates[1]; // Latitude is at index 1
+    const longitude = userData.location.coordinates[0];
+    console.log("latitude:", latitude, "longitude:", longitude);
 
+    const option = {
+      location: {
+        $geoWithin: {
+          $centerSphere: [[longitude, latitude], 15 / 3962.2],
+        },
+      },
+    };
+    const cars = await Car.find(option);
+    res.status(200).send(cars);
+  } catch (err) {
+    res.status(500).send({
+      message: "Internal server error",
+      err,
+    });
+  }
+};
 module.exports = {
   createCarAdd,
   findAllCar,
@@ -272,4 +298,5 @@ module.exports = {
   updateCar,
   deleteCar,
   serchFeildCar,
+  findnearestcar,
 };
