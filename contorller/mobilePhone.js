@@ -29,8 +29,16 @@ const createMobileAdd = async (req, res) => {
         console.log(err);
       }
     }
-    const { title, description, brand, condition, price, latitude, longitude } =
-      req.body;
+    const {
+      title,
+      description,
+      brand,
+      condition,
+      price,
+      isFeatured,
+      latitude,
+      longitude,
+    } = req.body;
     if (
       !title ||
       !description ||
@@ -56,6 +64,7 @@ const createMobileAdd = async (req, res) => {
       description,
       brand,
       condition,
+      isFeatured,
       price,
       location: {
         type: "Point",
@@ -68,6 +77,26 @@ const createMobileAdd = async (req, res) => {
     });
 
     await product.save();
+
+    console.log(product.isFeatured);
+    if (product.isFeatured === true) {
+      const scheduledJob = cron.schedule("* * */10 * *", async () => {
+        try {
+          const updatedProduct = await Mobile.findByIdAndUpdate(
+            product._id,
+            { isFeatured: false },
+            { new: true }
+          );
+          console.log(
+            `Updated isFeatured to false for product with ID: ${updatedProduct._id}`
+          );
+          scheduledJob.stop();
+          console.log("isFeature is completed not its Of");
+        } catch (error) {
+          console.error("An error occurred:", error);
+        }
+      });
+    }
 
     const products = new Product({
       seller_id: product.seller_id,
@@ -242,7 +271,6 @@ const findnearestmobile = async (req, res) => {
     // console.log(userData.location);
     const latitude = userData.location.coordinates[1]; // Latitude is at index 1
     const longitude = userData.location.coordinates[0];
-    console.log("latitude:", latitude, "longitude:", longitude);
 
     const option = {
       location: {

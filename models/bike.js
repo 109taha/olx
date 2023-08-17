@@ -98,6 +98,10 @@ const BikeSchema = new mongoose.Schema(
       type: { type: String, require: true },
       coordinates: [],
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
     pics: {
       type: Array,
       require: true,

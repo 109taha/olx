@@ -4,6 +4,8 @@ const { User } = require("../models/user");
 const cloudinary = require("../helper/cloudinary");
 const fs = require("fs");
 const { Product } = require("../models/product");
+const cron = require("node-cron");
+const { time } = require("console");
 
 const createbikeAdd = async (req, res) => {
   const files = req.files;
@@ -40,6 +42,7 @@ const createbikeAdd = async (req, res) => {
       price,
       latitude,
       longitude,
+      isFeatured,
     } = req.body;
     if (
       !title ||
@@ -73,6 +76,7 @@ const createbikeAdd = async (req, res) => {
       KMsDriven,
       condition,
       price,
+      isFeatured,
       location: {
         type: "Point",
         coordinates: [
@@ -82,8 +86,27 @@ const createbikeAdd = async (req, res) => {
       },
       pics: attachArtwork.map((x) => x.url),
     });
-
     await product.save();
+
+    console.log(product.isFeatured);
+    if (product.isFeatured === true) {
+      const scheduledJob = cron.schedule("* * */10 * *", async () => {
+        try {
+          const updatedProduct = await Bike.findByIdAndUpdate(
+            product._id,
+            { isFeatured: false },
+            { new: true }
+          );
+          console.log(
+            `Updated isFeatured to false for product with ID: ${updatedProduct._id}`
+          );
+          scheduledJob.stop();
+          console.log("isFeature is completed not its Of");
+        } catch (error) {
+          console.error("An error occurred:", error);
+        }
+      });
+    }
 
     const products = new Product({
       seller_id: product.seller_id,
@@ -105,7 +128,11 @@ const createbikeAdd = async (req, res) => {
 
 const findAllbike = async (req, res) => {
   try {
-    const products = await Bike.find();
+    const products = await Bike.find({}).sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
+    console.log(products);
     if (!products) {
       return res.status(400).send({
         message: "No Cars Found",
@@ -256,7 +283,6 @@ const findnearestbike = async (req, res) => {
     // console.log(userData.location);
     const latitude = userData.location.coordinates[1]; // Latitude is at index 1
     const longitude = userData.location.coordinates[0];
-    console.log("latitude:", latitude, "longitude:", longitude);
 
     const option = {
       location: {
@@ -274,6 +300,7 @@ const findnearestbike = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   createbikeAdd,
   findAllbike,

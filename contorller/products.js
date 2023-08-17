@@ -56,7 +56,6 @@ const findnearest = async (req, res) => {
     // console.log(userData.location);
     const latitude = userData.location.coordinates[1]; // Latitude is at index 1
     const longitude = userData.location.coordinates[0];
-    console.log("latitude:", latitude, "longitude:", longitude);
 
     const option = {
       location: {
