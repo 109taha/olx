@@ -5,7 +5,6 @@ const cloudinary = require("../helper/cloudinary");
 const fs = require("fs");
 const { Product } = require("../models/product");
 const cron = require("node-cron");
-const { time } = require("console");
 
 const createbikeAdd = async (req, res) => {
   const files = req.files;
@@ -45,7 +44,6 @@ const createbikeAdd = async (req, res) => {
       isFeatured,
       isFeaturedData,
     } = req.body;
-    console.log(isFeaturedData);
     if (
       !title ||
       !description ||
@@ -93,11 +91,11 @@ const createbikeAdd = async (req, res) => {
 
     console.log(product.isFeatured);
     if (product.isFeatured === true) {
-      const scheduledJob = cron.schedule("* * */10 * *", async () => {
+      const scheduledJob = cron.schedule("*/1 * * * *", async () => {
         try {
           const updatedProduct = await Bike.findByIdAndUpdate(
             product._id,
-            { isFeatured: false },
+            { isFeatured: false, isFeaturedData: null },
             { new: true }
           );
           console.log(

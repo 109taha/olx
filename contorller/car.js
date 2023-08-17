@@ -4,6 +4,7 @@ const { User } = require("../models/user");
 const cloudinary = require("../helper/cloudinary");
 const fs = require("fs");
 const { Product } = require("../models/product");
+const cron = require("node-cron");
 
 const createCarAdd = async (req, res) => {
   const files = req.files;
@@ -104,16 +105,16 @@ const createCarAdd = async (req, res) => {
       },
       pics: attachArtwork.map((x) => x.url),
     });
-
     await product.save();
 
     console.log(product.isFeatured);
     if (product.isFeatured === true) {
-      const scheduledJob = cron.schedule("* * */10 * *", async () => {
+      const scheduledJob = cron.schedule("*/1 * * * *", async () => {
         try {
+          console.log("123");
           const updatedProduct = await Car.findByIdAndUpdate(
             product._id,
-            { isFeatured: false },
+            { isFeatured: false, isFeaturedData: null },
             { new: true }
           );
           console.log(
