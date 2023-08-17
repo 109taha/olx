@@ -25,4 +25,23 @@ const findAll = async (req, res, next) => {
     res.status(500).send({ message: "Internal server error" });
   }
 };
-module.exports = { findAllProduct, findAll };
+
+const search = async (req, res, next) => {
+  try {
+    const searchfield = req.params.title;
+    const bikes = await Bike.find({
+      title: { $regex: searchfield, $options: "i" },
+    });
+    const cars = await Car.find({
+      title: { $regex: searchfield, $options: "i" },
+    });
+    const mobiles = await Mobile.find({
+      title: { $regex: searchfield, $options: "i" },
+    });
+    const item = { bikes, cars, mobiles };
+    res.status(200).send(item);
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error" });
+  }
+};
+module.exports = { findAllProduct, findAll, search };
