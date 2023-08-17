@@ -66,6 +66,9 @@ const MobilePhoneSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isFeaturedData: {
+      type: Date,
+    },
     pics: {
       type: Array,
       require: true,
@@ -73,6 +76,12 @@ const MobilePhoneSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+MobilePhoneSchema.pre("save", function (next) {
+  if (this.isModified("isFeatured") && this.isFeatured === true) {
+    this.isFeaturedData = new Date();
+  }
+  next();
+});
 
 const Mobile = mongoose.model("Mobile-Phone", MobilePhoneSchema);
 

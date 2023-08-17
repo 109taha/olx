@@ -36,6 +36,7 @@ const createMobileAdd = async (req, res) => {
       condition,
       price,
       isFeatured,
+      isFeaturedData,
       latitude,
       longitude,
     } = req.body;
@@ -65,6 +66,7 @@ const createMobileAdd = async (req, res) => {
       brand,
       condition,
       isFeatured,
+      isFeaturedData,
       price,
       location: {
         type: "Point",

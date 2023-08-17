@@ -102,6 +102,9 @@ const BikeSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isFeaturedData: {
+      type: Date,
+    },
     pics: {
       type: Array,
       require: true,
@@ -109,6 +112,13 @@ const BikeSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+BikeSchema.pre("save", function (next) {
+  if (this.isModified("isFeatured") && this.isFeatured === true) {
+    this.isFeaturedData = new Date();
+  }
+  next();
+});
 
 const Bike = mongoose.model("Bike", BikeSchema);
 

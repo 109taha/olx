@@ -43,7 +43,9 @@ const createbikeAdd = async (req, res) => {
       latitude,
       longitude,
       isFeatured,
+      isFeaturedData,
     } = req.body;
+    console.log(isFeaturedData);
     if (
       !title ||
       !description ||
@@ -77,6 +79,7 @@ const createbikeAdd = async (req, res) => {
       condition,
       price,
       isFeatured,
+      isFeaturedData,
       location: {
         type: "Point",
         coordinates: [

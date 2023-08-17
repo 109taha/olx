@@ -44,6 +44,7 @@ const createCarAdd = async (req, res) => {
       features,
       condition,
       isFeatured,
+      isFeaturedData,
       price,
       latitude,
       longitude,
@@ -93,6 +94,7 @@ const createCarAdd = async (req, res) => {
       condition,
       price,
       isFeatured,
+      isFeaturedData,
       location: {
         type: "Point",
         coordinates: [
