@@ -109,7 +109,7 @@ const createCarAdd = async (req, res) => {
 
     console.log(product.isFeatured);
     if (product.isFeatured === true) {
-      const scheduledJob = cron.schedule("*/1 * * * *", async () => {
+      const scheduledJob = cron.schedule("* * */10 * *", async () => {
         try {
           console.log("123");
           const updatedProduct = await Car.findByIdAndUpdate(

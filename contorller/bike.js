@@ -91,7 +91,7 @@ const createbikeAdd = async (req, res) => {
 
     console.log(product.isFeatured);
     if (product.isFeatured === true) {
-      const scheduledJob = cron.schedule("*/1 * * * *", async () => {
+      const scheduledJob = cron.schedule("* * */10 * *", async () => {
         try {
           const updatedProduct = await Bike.findByIdAndUpdate(
             product._id,
