@@ -50,10 +50,15 @@ const {
   search,
   findnearest,
 } = require("../contorller/products");
-const { verify } = require("jsonwebtoken");
+const {
+  validMobileSchema,
+  validCarSchema,
+  validBikeSchema,
+} = require("../helper/joi/category.js/categoryJoi");
+const validUserSchema = require("../helper/joi/userJoi");
 
 //users
-router.post("/createUser", createUser);
+router.post("/createUser", validUserSchema, createUser);
 router.post("/loginUser", loginUser);
 router.get("/findUserById/:userId", findUserById);
 router.delete("/deleteUser/:userId", deleteUser);
@@ -69,6 +74,7 @@ router.post(
   "/createMobileAdd",
   verifyuser,
   upload.array("attachArtwork", 20),
+  validMobileSchema,
   createMobileAdd
 );
 router.get("/findAllMobiles", findAllMobiles);
@@ -84,6 +90,7 @@ router.post(
   "/createCarAdd",
   verifyuser,
   upload.array("attachArtwork", 20),
+  validCarSchema,
   createCarAdd
 );
 router.get("/findAllCar", findAllCar);
@@ -99,6 +106,7 @@ router.post(
   "/createBike",
   verifyuser,
   upload.array("attachArtwork", 20),
+  validBikeSchema,
   createbikeAdd
 );
 router.get("/findAllbike", findAllbike);
