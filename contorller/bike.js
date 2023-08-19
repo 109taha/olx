@@ -9,6 +9,7 @@ const BikeMaker = require("../models/bike/bikeMaker");
 const BikeModel = require("../models/bike/bikeModel");
 
 const createbikeAdd = async (req, res) => {
+  //cloudinary
   const files = req.files;
   const attachArtwork = [];
   try {
@@ -32,6 +33,7 @@ const createbikeAdd = async (req, res) => {
         console.log(err);
       }
     }
+
     const {
       title,
       description,
@@ -46,6 +48,7 @@ const createbikeAdd = async (req, res) => {
       isFeatured,
       isFeaturedData,
     } = req.body;
+
     if (
       !title ||
       !description ||
@@ -61,19 +64,27 @@ const createbikeAdd = async (req, res) => {
       return res.status(400).send({ message: "All fields are required" });
     }
 
+    //finding user
     const user = req.headers.authorization.split(" ")[1];
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
+
+    //bike maker
     const bikes = new BikeMaker({
       maker,
     });
+
+    //bike model
     const bikemodel = new BikeModel({
       model,
     });
-    console.log(bikemodel.model);
+
+    //user name and phonenumber
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
     const name = users.first_name + " " + users.last_name;
+
+    // saving new bike
     const product = new Bike({
       seller_id: userId,
       title,
@@ -95,7 +106,7 @@ const createbikeAdd = async (req, res) => {
       },
       pics: attachArtwork.map((x) => x.url),
     });
-    console.log(product);
+
     if (product.isFeatured === true) {
       const scheduledJob = cron.schedule("* * */10 * *", async () => {
         try {
@@ -262,16 +273,26 @@ const deleteBike = async (req, res) => {
     const userId = decryptedToken.userId;
 
     const product = await Bike.findById(productId);
+
     if (!product) {
       return res.status(400).send({
         message: "No product found for that ID",
       });
     }
+
+    const productFind = await Product.find({ product_id: productId });
+    const findingmaker = await BikeMaker.find(product.maker);
+    const findingmodel = await BikeModel.find(product.model);
+
     if (product.seller_id.toString() !== userId) {
       return res.status(403).send({
         message: "You are not allowed to delete this product",
       });
     }
+
+    await BikeModel.findByIdAndDelete(findingmodel[0]._id.toString());
+    await BikeMaker.findByIdAndDelete(findingmaker[0]._id.toString());
+    await Product.findByIdAndDelete(productFind[0]._id.toString());
     await Bike.findByIdAndDelete(productId);
 
     return res.status(200).send({
