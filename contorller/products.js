@@ -12,19 +12,28 @@ const findAllProduct = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    return res.status(500).send({ message: "Internal server error!" });
+    res.status(500).send({ message: "Internal server error" });
   }
 };
 
 const findAll = async (req, res, next) => {
   try {
-    const bikes = await Bike.find();
-    const cars = await Car.find();
-    const mobiles = await Mobile.find();
+    const bikes = await Bike.find().sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
+    const cars = await Car.find().sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
+    const mobiles = await Mobile.find().sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
 
     res.status(200).send({ bikes, cars, mobiles });
   } catch (error) {
-    return res.status(500).send({ message: "Internal server error!" });
+    res.status(500).send({ message: "Internal server error" });
   }
 };
 
@@ -43,7 +52,7 @@ const search = async (req, res, next) => {
     const item = { bikes, cars, mobiles };
     res.status(200).send(item);
   } catch (error) {
-    return res.status(500).send({ message: "Internal server error!" });
+    res.status(500).send({ message: "Internal server error" });
   }
 };
 
@@ -52,7 +61,6 @@ const findnearest = async (req, res) => {
     const user = req.headers.authorization.split(" ")[1];
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
-
     const userData = await User.findById(userId);
 
     const latitude = userData.location.coordinates[1];
@@ -65,14 +73,35 @@ const findnearest = async (req, res) => {
         },
       },
     };
-    const bikes = await Bike.find(option);
-    const cars = await Car.find(option);
-    const mobiles = await Mobile.find(option);
+    const bikes = await Bike.find(option).sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
+    const cars = await Car.find(option).sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
+    const mobiles = await Mobile.find(option).sort({
+      isFeatured: -1,
+      createdAt: -1,
+    });
     const items = { cars, mobiles, bikes };
     res.status(200).send(items);
   } catch (err) {
-    return res.status(500).send({ message: "Internal server error!" });
+    res.status(500).send({
+      message: "Internal server error",
+      err,
+    });
   }
 };
 
-module.exports = { findAllProduct, findAll, search, findnearest };
+const findByUserId = async (req, res) => {
+  const userId = req.params.userId;
+  const response = await Product.find({ seller_id: userId }).sort({
+    isFeatured: -1,
+    createdAt: -1,
+  });
+  return res.status(200).send(response);
+};
+
+module.exports = { findAllProduct, findAll, search, findnearest, findByUserId };

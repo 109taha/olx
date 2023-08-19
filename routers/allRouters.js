@@ -49,6 +49,7 @@ const {
   findAll,
   search,
   findnearest,
+  findByUserId,
 } = require("../contorller/products");
 const {
   validMobileSchema,
@@ -68,6 +69,7 @@ router.get("/findAllProduct", findAllProduct);
 router.get("/finding", findAll);
 router.get("/search/:title", search);
 router.get("/findnearest", verifyuser, findnearest);
+router.get("/findByUserId/:userId", findByUserId);
 
 //Mobile phone
 router.post(
