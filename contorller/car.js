@@ -1,10 +1,12 @@
-const { Car } = require("../models/car");
+const { Car } = require("../models/car/car");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/user");
 const cloudinary = require("../helper/cloudinary");
 const fs = require("fs");
 const { Product } = require("../models/product");
 const cron = require("node-cron");
+const CarMaker = require("../models/car/carMaker");
+const CarModel = require("../models/car/carModel");
 
 const createCarAdd = async (req, res) => {
   const files = req.files;
@@ -75,6 +77,10 @@ const createCarAdd = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
+    const carMakers = new CarMaker({
+      maker,
+    });
+
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
     const name = users.first_name + " " + users.last_name;
@@ -82,7 +88,7 @@ const createCarAdd = async (req, res) => {
       seller_id: userId,
       title,
       description,
-      maker,
+      maker: carMakers,
       model,
       year,
       KMsDriven,
@@ -138,6 +144,9 @@ const createCarAdd = async (req, res) => {
       product_id: product._id,
       product_type: "Car",
     });
+
+    await carModels.save();
+    await carMakers.save();
     await product.save();
     await products.save();
     res.status(200).send({
@@ -172,7 +181,7 @@ const findAllCar = async (req, res) => {
 const findCarById = async (req, res) => {
   try {
     const mobileId = req.params.mobileId;
-    const product = await Car.findById(mobileId);
+    const product = await Car.findById(mobileId).populate("model");
     if (!product) {
       return res.status(400).send({
         message: "no car on that Id",
@@ -263,20 +272,18 @@ const deleteCar = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
-    const product = await Car.findById(productId);
-    if (!product) {
-      return res.status(400).send({
-        message: "No product found for that ID",
-      });
-    }
     if (product.seller_id.toString() !== userId) {
       return res.status(403).send({
         message: "You are not allowed to delete this product",
       });
     }
 
-    await Car.findByIdAndDelete(productId);
-
+    const product = await Car.findByIdAndDelete(productId);
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
     return res.status(200).send({
       message: "Product deleted successfully",
     });

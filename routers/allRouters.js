@@ -54,8 +54,8 @@ const {
   validMobileSchema,
   validCarSchema,
   validBikeSchema,
-} = require("../helper/joi/category.js/categoryJoi");
-const validUserSchema = require("../helper/joi/userJoi");
+} = require("../middlewares/joi/category.js/categoryJoi");
+const validUserSchema = require("../middlewares/joi/userJoi");
 
 //users
 router.post("/createUser", validUserSchema, createUser);

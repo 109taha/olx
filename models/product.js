@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
+    picOfCategory: {
+      type: String,
+      require: true,
+    },
     seller_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

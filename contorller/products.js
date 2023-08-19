@@ -1,6 +1,6 @@
 const { Product } = require("../models/product");
-const { Car } = require("../models/car");
-const { Bike } = require("../models/bike");
+const { Car } = require("../models/car/car");
+const { Bike } = require("../models/bike/bike");
 const { Mobile } = require("../models/mobilePhone");
 const { User } = require("../models/user");
 const jwt = require("jsonwebtoken");
@@ -76,4 +76,5 @@ const findnearest = async (req, res) => {
     });
   }
 };
+
 module.exports = { findAllProduct, findAll, search, findnearest };

@@ -1,10 +1,12 @@
-const { Bike } = require("../models/bike");
-const jwt = require("jsonwebtoken");
-const { User } = require("../models/user");
-const cloudinary = require("../helper/cloudinary");
-const fs = require("fs");
-const { Product } = require("../models/product");
 const cron = require("node-cron");
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const cloudinary = require("../helper/cloudinary");
+const { Bike } = require("../models/bike/bike");
+const { User } = require("../models/user");
+const { Product } = require("../models/product");
+const BikeMaker = require("../models/bike/bikeMaker");
+const BikeModel = require("../models/bike/bikeModel");
 
 const createbikeAdd = async (req, res) => {
   const files = req.files;
@@ -62,7 +64,13 @@ const createbikeAdd = async (req, res) => {
     const user = req.headers.authorization.split(" ")[1];
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
-
+    const bikes = new BikeMaker({
+      maker,
+    });
+    const bikemodel = new BikeModel({
+      model,
+    });
+    console.log(bikemodel.model);
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
     const name = users.first_name + " " + users.last_name;
@@ -70,8 +78,8 @@ const createbikeAdd = async (req, res) => {
       seller_id: userId,
       title,
       description,
-      maker,
-      model,
+      maker: bikes,
+      model: bikemodel,
       year,
       KMsDriven,
       condition,
@@ -87,7 +95,7 @@ const createbikeAdd = async (req, res) => {
       },
       pics: attachArtwork.map((x) => x.url),
     });
-
+    console.log(product);
     if (product.isFeatured === true) {
       const scheduledJob = cron.schedule("* * */10 * *", async () => {
         try {
@@ -118,6 +126,8 @@ const createbikeAdd = async (req, res) => {
       product_id: product._id,
       product_type: "Bike",
     });
+    await bikemodel.save();
+    await bikes.save();
     await product.save();
     await products.save();
 
@@ -153,12 +163,17 @@ const findAllbike = async (req, res) => {
 const findBikeById = async (req, res) => {
   try {
     const bikeId = req.params.mobileId;
-    const product = await Bike.findById(bikeId);
+    const product = await Bike.findById(bikeId)
+      .populate("model")
+      .populate("maker");
+    console.log(product);
+
     if (!product) {
       return res.status(400).send({
         message: "no car on that Id",
       });
     }
+
     const userId = product.seller_id.toString();
     const user = await User.findById(userId);
     const name = user.first_name + " " + user.last_name;
@@ -254,7 +269,6 @@ const deleteBike = async (req, res) => {
         message: "You are not allowed to delete this product",
       });
     }
-
     await Bike.findByIdAndDelete(productId);
 
     return res.status(200).send({
