@@ -240,6 +240,7 @@ const deleteMobile = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
+    const products = await Product.find({ product_id: productId });
     const product = await Mobile.findById(productId);
     if (!product) {
       return res.status(400).send({
@@ -251,7 +252,7 @@ const deleteMobile = async (req, res) => {
         message: "You are not allowed to delete this product",
       });
     }
-
+    await Product.findByIdAndDelete(products[0]._id.toString());
     await Mobile.findByIdAndDelete(productId);
 
     return res.status(200).send({
