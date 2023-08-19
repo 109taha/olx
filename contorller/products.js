@@ -12,7 +12,7 @@ const findAllProduct = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -24,7 +24,7 @@ const findAll = async (req, res, next) => {
 
     res.status(200).send({ bikes, cars, mobiles });
   } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -43,7 +43,7 @@ const search = async (req, res, next) => {
     const item = { bikes, cars, mobiles };
     res.status(200).send(item);
   } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -52,9 +52,10 @@ const findnearest = async (req, res) => {
     const user = req.headers.authorization.split(" ")[1];
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
+
     const userData = await User.findById(userId);
-    // console.log(userData.location);
-    const latitude = userData.location.coordinates[1]; // Latitude is at index 1
+
+    const latitude = userData.location.coordinates[1];
     const longitude = userData.location.coordinates[0];
 
     const option = {
@@ -70,10 +71,7 @@ const findnearest = async (req, res) => {
     const items = { cars, mobiles, bikes };
     res.status(200).send(items);
   } catch (err) {
-    res.status(500).send({
-      message: "Internal server error",
-      err,
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 

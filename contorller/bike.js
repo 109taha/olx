@@ -149,7 +149,7 @@ const createbikeAdd = async (req, res) => {
       Seller_Number: contact_Number,
     });
   } catch (error) {
-    return res.status(500).send({ message: "something went wrong" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -168,7 +168,7 @@ const findAllbike = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    return res.status(500).send({ message: "Internal server error" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -197,9 +197,7 @@ const findBikeById = async (req, res) => {
       seller_Contact: number,
     });
   } catch (error) {
-    return res.status(500).send({
-      message: "internal server error",
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -219,11 +217,7 @@ const findUserBike = async (req, res) => {
       data: userProducts,
     });
   } catch (error) {
-    console.error(error);
-
-    return res.status(500).send({
-      message: "Internal server er2ror",
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -235,7 +229,6 @@ const updateBike = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
-    // Check if the user has the right to update this product
     const product = await Bike.findById(productId);
     if (!product) {
       return res.status(400).send({
@@ -261,7 +254,7 @@ const updateBike = async (req, res) => {
     return res.status(200).send({ data: updatedProduct });
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: "An error occurred" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -299,8 +292,7 @@ const deleteBike = async (req, res) => {
       message: "Product deleted successfully",
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: "An error occurred" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -313,8 +305,7 @@ const serchFeildBike = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    console.error("Error while searching for products:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -338,10 +329,7 @@ const findnearestbike = async (req, res) => {
     const bikes = await Bike.find(option);
     res.status(200).send(bikes);
   } catch (err) {
-    res.status(500).send({
-      message: "Internal server error",
-      err,
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 

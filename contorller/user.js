@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/user");
+const City = require("../models/cities");
 
 const createUser = async (req, res) => {
   try {
@@ -13,6 +14,7 @@ const createUser = async (req, res) => {
       phone_number,
       latitude,
       longitude,
+      city,
     } = req.body;
     if (
       !username ||
@@ -22,7 +24,8 @@ const createUser = async (req, res) => {
       !last_name ||
       !phone_number ||
       !latitude ||
-      !longitude
+      !longitude ||
+      !city
     ) {
       return res.status(400).send({ message: "All fields are required" });
     }
@@ -39,7 +42,12 @@ const createUser = async (req, res) => {
         .send({ message: "Username is already registered" });
     }
 
+    const cities = new City({
+      city,
+    });
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = new User({
       username,
       email,
@@ -54,12 +62,17 @@ const createUser = async (req, res) => {
           parseFloat(req.body.latitude),
         ],
       },
+      city: cities,
     });
 
+    await cities.save();
     await user.save();
-    return res.status(200).send(user);
+
+    return res
+      .status(200)
+      .send({ message: "User Created Successfully!", user });
   } catch (error) {
-    throw error;
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -91,7 +104,7 @@ const loginUser = async (req, res) => {
 
     return res.status(200).send({ JWT: token, data: user });
   } catch (error) {
-    throw error;
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -113,7 +126,7 @@ const deleteUser = async (req, res) => {
       message: "user deleted successfully",
     });
   } catch (error) {
-    throw error;
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -132,9 +145,7 @@ const findUserById = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Internal server error",
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 

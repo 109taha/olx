@@ -38,13 +38,21 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     location: {
-      type: { type: String, require: true },
+      type: {
+        type: String,
+        require: true,
+      },
       coordinates: [],
+    },
+    city: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+      ref: "City",
     },
     role: {
       type: String,
-      enum: ["User", "Admin"], // Example roles
-      default: "User", // Default value
+      enum: ["User", "Admin"],
+      default: "User",
     },
   },
   { timestamps: true }

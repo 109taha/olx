@@ -1,14 +1,14 @@
-const { Car } = require("../models/car/car");
+const fs = require("fs");
+const cron = require("node-cron");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/user");
-const cloudinary = require("../helper/cloudinary");
-const fs = require("fs");
+const { Car } = require("../models/car/car");
 const { Product } = require("../models/product");
-const cron = require("node-cron");
+const cloudinary = require("../helper/cloudinary");
 const CarMaker = require("../models/car/carMaker");
 const CarModel = require("../models/car/carModel");
-const CarRegCity = require("../models/car/carRegisterationCity");
 const CarFeature = require("../models/car/carFeature");
+const CarRegCity = require("../models/car/carRegisterationCity");
 
 const createCarAdd = async (req, res) => {
   const files = req.files;
@@ -172,7 +172,7 @@ const createCarAdd = async (req, res) => {
       Seller_Number: contact_Number,
     });
   } catch (error) {
-    return res.status(500).send({ message: "something went wrong" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -191,7 +191,7 @@ const findAllCar = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    return res.status(500).send({ message: "Internal server error" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -219,9 +219,7 @@ const findCarById = async (req, res) => {
       seller_Contact: number,
     });
   } catch (error) {
-    return res.status(500).send({
-      message: "internal server error",
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -241,11 +239,7 @@ const findUserCar = async (req, res) => {
       data: userProducts,
     });
   } catch (error) {
-    console.error(error);
-
-    return res.status(500).send({
-      message: "Internal server er2ror",
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -282,8 +276,7 @@ const updateCar = async (req, res) => {
 
     return res.status(200).send({ data: updatedProduct });
   } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: "An error occurred" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -325,8 +318,7 @@ const deleteCar = async (req, res) => {
       message: "Product deleted successfully",
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: "An error occurred" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -339,8 +331,7 @@ const serchFeildCar = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    console.error("Error while searching for products:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
@@ -364,10 +355,7 @@ const findnearestcar = async (req, res) => {
     const cars = await Car.find(option);
     res.status(200).send(cars);
   } catch (err) {
-    res.status(500).send({
-      message: "Internal server error",
-      err,
-    });
+    return res.status(500).send({ message: "Internal server error!" });
   }
 };
 
