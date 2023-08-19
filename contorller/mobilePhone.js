@@ -143,6 +143,7 @@ const findAllMobiles = async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 };
+
 const findMobileById = async (req, res) => {
   try {
     const mobileId = req.params.mobileId;
@@ -231,6 +232,7 @@ const updateMobile = async (req, res) => {
     return res.status(500).send({ message: "An error occurred" });
   }
 };
+
 const deleteMobile = async (req, res) => {
   try {
     const productId = req.params.productId;
@@ -274,6 +276,7 @@ const serchFeildMobile = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 const findnearestmobile = async (req, res) => {
   try {
     const user = req.headers.authorization.split(" ")[1];

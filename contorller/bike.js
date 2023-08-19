@@ -160,6 +160,7 @@ const findAllbike = async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 };
+
 const findBikeById = async (req, res) => {
   try {
     const bikeId = req.params.mobileId;
@@ -214,6 +215,7 @@ const findUserBike = async (req, res) => {
     });
   }
 };
+
 const updateBike = async (req, res) => {
   try {
     const updateData = req.body;
@@ -251,6 +253,7 @@ const updateBike = async (req, res) => {
     return res.status(500).send({ message: "An error occurred" });
   }
 };
+
 const deleteBike = async (req, res) => {
   try {
     const productId = req.params.productId;
@@ -293,6 +296,7 @@ const serchFeildBike = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 const findnearestbike = async (req, res) => {
   try {
     const user = req.headers.authorization.split(" ")[1];
