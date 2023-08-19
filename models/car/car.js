@@ -23,7 +23,7 @@ const CarSchema = new mongoose.Schema(
     model: {
       type: mongoose.Schema.Types.ObjectId,
       require: true,
-      ref: "ModelSchme",
+      ref: "CarModel",
     },
     year: {
       type: Number,

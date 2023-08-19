@@ -81,6 +81,10 @@ const createCarAdd = async (req, res) => {
       maker,
     });
 
+    const carModel = new CarModel({
+      model,
+    });
+
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
     const name = users.first_name + " " + users.last_name;
@@ -89,7 +93,7 @@ const createCarAdd = async (req, res) => {
       title,
       description,
       maker: carMakers,
-      model,
+      model: carModel,
       year,
       KMsDriven,
       fuel,
@@ -145,7 +149,7 @@ const createCarAdd = async (req, res) => {
       product_type: "Car",
     });
 
-    await carModels.save();
+    await carModel.save();
     await carMakers.save();
     await product.save();
     await products.save();
@@ -181,7 +185,9 @@ const findAllCar = async (req, res) => {
 const findCarById = async (req, res) => {
   try {
     const mobileId = req.params.mobileId;
-    const product = await Car.findById(mobileId).populate("model");
+    const product = await Car.findById(mobileId)
+      .populate("model")
+      .populate("maker");
     if (!product) {
       return res.status(400).send({
         message: "no car on that Id",
