@@ -280,18 +280,29 @@ const deleteCar = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
+    const product = await Car.findById(productId);
+
+    if (!product) {
+      return res.status(400).send({
+        message: "No product found for that ID",
+      });
+    }
+
+    const productFind = await Product.find({ product_id: productId });
+    const findingmaker = await CarMaker.find(product.maker);
+    const findingmodel = await CarModel.find(product.model);
+
     if (product.seller_id.toString() !== userId) {
       return res.status(403).send({
         message: "You are not allowed to delete this product",
       });
     }
 
-    const product = await Car.findByIdAndDelete(productId);
-    if (!product) {
-      return res.status(400).send({
-        message: "No product found for that ID",
-      });
-    }
+    await CarModel.findByIdAndDelete(findingmodel[0]._id.toString());
+    await CarMaker.findByIdAndDelete(findingmaker[0]._id.toString());
+    await Product.findByIdAndDelete(productFind[0]._id.toString());
+    await Car.findByIdAndDelete(productId);
+
     return res.status(200).send({
       message: "Product deleted successfully",
     });
@@ -300,7 +311,6 @@ const deleteCar = async (req, res) => {
     return res.status(500).send({ message: "An error occurred" });
   }
 };
-
 const serchFeildCar = async (req, res) => {
   try {
     const searchfield = req.params.title;
