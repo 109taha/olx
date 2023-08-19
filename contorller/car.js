@@ -7,6 +7,8 @@ const { Product } = require("../models/product");
 const cron = require("node-cron");
 const CarMaker = require("../models/car/carMaker");
 const CarModel = require("../models/car/carModel");
+const CarRegCity = require("../models/car/carRegisterationCity");
+const CarFeature = require("../models/car/carFeature");
 
 const createCarAdd = async (req, res) => {
   const files = req.files;
@@ -85,9 +87,18 @@ const createCarAdd = async (req, res) => {
       model,
     });
 
+    const registration = new CarRegCity({
+      registrationCity,
+    });
+
+    const carFeature = new CarFeature({
+      features,
+    });
+
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
     const name = users.first_name + " " + users.last_name;
+
     const product = new Car({
       seller_id: userId,
       title,
@@ -97,11 +108,11 @@ const createCarAdd = async (req, res) => {
       year,
       KMsDriven,
       fuel,
-      registrationCity,
+      registrationCity: registration,
       documants,
       assembly,
       transmission,
-      features,
+      features: carFeature,
       condition,
       price,
       isFeatured,
@@ -116,7 +127,6 @@ const createCarAdd = async (req, res) => {
       pics: attachArtwork.map((x) => x.url),
     });
 
-    console.log(product.isFeatured);
     if (product.isFeatured === true) {
       const scheduledJob = cron.schedule("* * */10 * *", async () => {
         try {
@@ -149,6 +159,8 @@ const createCarAdd = async (req, res) => {
       product_type: "Car",
     });
 
+    await carFeature.save();
+    await registration.save();
     await carModel.save();
     await carMakers.save();
     await product.save();
@@ -188,7 +200,9 @@ const findCarById = async (req, res) => {
     const mobileId = req.params.mobileId;
     const product = await Car.findById(mobileId)
       .populate("model")
-      .populate("maker");
+      .populate("maker")
+      .populate("registrationCity")
+      .populate("features");
     if (!product) {
       return res.status(400).send({
         message: "no car on that Id",
@@ -288,6 +302,8 @@ const deleteCar = async (req, res) => {
       });
     }
 
+    const carFeature = await CarFeature.find(product.features);
+    const registration = await CarRegCity.find(product.registrationCity);
     const productFind = await Product.find({ product_id: productId });
     const findingmaker = await CarMaker.find(product.maker);
     const findingmodel = await CarModel.find(product.model);
@@ -298,6 +314,8 @@ const deleteCar = async (req, res) => {
       });
     }
 
+    await CarFeature.findByIdAndDelete(carFeature[0]._id.toString());
+    await CarRegCity.findByIdAndDelete(registration[0]._id.toString());
     await CarModel.findByIdAndDelete(findingmodel[0]._id.toString());
     await CarMaker.findByIdAndDelete(findingmaker[0]._id.toString());
     await Product.findByIdAndDelete(productFind[0]._id.toString());
@@ -311,6 +329,7 @@ const deleteCar = async (req, res) => {
     return res.status(500).send({ message: "An error occurred" });
   }
 };
+
 const serchFeildCar = async (req, res) => {
   try {
     const searchfield = req.params.title;
