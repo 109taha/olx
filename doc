@@ -1,0 +1,529 @@
+olx clone
+
+============user====================
+POST
+register
+/createUser
+
+Body
+raw (json)
+json
+{
+"username":"user",
+"email": "user@gmail.com",
+"password":"qwerty1234",
+"first_name":"olx",
+"last_name":"admin",
+"phone_number":"0315487952",
+"latitude":"31.5204",
+"longitude":"74.3587",
+"city": "Lahore"
+}
+
+POST
+login
+/loginUser
+Body
+raw (json)
+json
+{
+"email":"admin@gmail.com",
+"password":"qwerty1234"
+}
+
+GET
+find user by id
+/findUserById/:userId
+Path Variables
+userId
+64e0a53740e5dd9df4b86aa7
+
+DELETE
+deleted
+/deleteUser/:userId
+Path Variables
+userId
+64e1c31bcdd095ca31bd3a27
+products
+
+============mobilephone==============
+
+POST
+mobile creating
+/createMobileAdd
+Authorization
+Bearer Token
+Token
+<token>
+Body
+form-data
+title
+samsung s22 ultra
+description
+samsung s22 abhi lia hh last month good condition best phone for playing pubg
+brand
+Samsung
+price
+180000
+condition
+New
+latitude
+31.5204
+longitude
+74.3587
+isFeatured
+false
+attachArtwork
+/C:/Users/Taha/Desktop/projects/olx-clone/pics/15.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/16.jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/17.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/18.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/19.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/20.jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final 4.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final 5.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final 7.jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final2.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final3.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final6.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/final7.jpg
+
+GET
+find all mobile
+/findAllMobiles
+
+GET
+find product by id
+/findMobileById/:mobileId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+mobileId
+64e0aa04fa25f3194fa6d95f
+Body
+raw (json)
+View More
+json
+{  
+ "title": "iphone 7",
+"description":"iphone 7 mint condition original peace leny khud ana hoga price almost final hai fuzool log door rahay",
+"category":"Electronics",
+"price":"12000",
+"status":"New",
+"location":"model colony karachi"
+}
+
+GET
+find product by user id
+/findUserMobiles/:userId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+userId
+64e0a6df1ae8ee56877dc6ea
+Body
+raw (json)
+View More
+json
+{  
+ "title": "iphone 7",
+"description":"iphone 7 mint condition original peace leny khud ana hoga price almost final hai fuzool log door rahay",
+"category":"Electronics",
+"price":"12000",
+"status":"New",
+"location":"model colony karachi"
+}
+
+PUT
+updated mobile
+/updateMoile/64dc5cd19109301a99de344d
+Authorization
+Bearer Token
+Token
+<token>
+Body
+raw (json)
+json
+{  
+ "title": "iphone 41",
+"description": "kancha peice brand new hh bhai bs asa samjo box he open kia hai ",
+"brand": "Samsung",
+"condition": "Used",
+"price": 12000
+}
+
+DELETE
+delete mobile
+/deleteMobile/:productId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+productId
+64e0aa3cfa25f3194fa6d965
+
+GET
+search feild mobile
+/mobile/:title
+Path Variables
+title
+
+GET
+find nearest mobile
+/findnearestmobile
+Authorization
+Bearer Token
+Token
+<token>
+
+================bike=================
+
+POST
+creating bike
+/createBike
+Authorization
+Bearer Token
+Token
+<token>
+Body
+form-data
+title
+yamaha ybr
+description
+must bike hh yr price almost final hai bike dekhny khud ana peray ga
+maker
+Yamaha
+model
+YBR 125G
+year
+2005
+KMsDriven
+130000
+condition
+Used
+price
+35000
+latitude
+24.8937
+longitude
+67.2163
+isFeatured
+false
+attachArtwork
+/C:/Users/Taha/Desktop/projects/olx-clone/pics/bike/images (1).jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/bike/images.jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/bike/maxresdefault.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/bike/sddefault.jpg
+
+GET
+find all Bike
+/findAllbike
+
+GET
+findBikeById
+/findBikeById/:mobileId
+Path Variables
+mobileId
+64df67fb20414cabecc3530d
+
+GET
+find product by user id
+/findUserBike/:userId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+userId
+64df6ca197998669bcf8cf1f
+Body
+raw (json)
+View More
+json
+{  
+ "title": "iphone 7",
+"description":"iphone 7 mint condition original peace leny khud ana hoga price almost final hai fuzool log door rahay",
+"category":"Electronics",
+"price":"12000",
+"status":"New",
+"location":"model colony karachi"
+}
+
+PUT
+updated bike
+/updateBike/:productId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+productId
+64db5e19a6dac804b37898de
+Body
+raw (json)
+json
+{  
+ "title":"honda 125 kancha peice",
+"description": "price almost final hai bike dekhny khud ana peray ga ",
+"maker": "Honda",
+"model": "YBR 125G",
+"year": 2022
+}
+
+DELETE
+delete bike
+/deleteBike/:productId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+productId
+64e06bb3c0d12bbe30f109f3
+
+GET
+search feild bike
+/bike/:title
+Path Variables
+title
+yama
+
+GET
+find nearest bike
+/findnearestbike
+Authorization
+Bearer Token
+Token
+<token>
+
+=========================car================
+
+POST
+creating cars
+/createCarAdd
+Authorization
+Bearer Token
+Token
+<token>
+Body
+form-data
+title
+toyota corolla
+description
+bohot tameez sy chalai hh bohot pyr sy rakhi hh koi fuzool offer na dy log a kr khud dekhy..
+maker
+Toyota
+model
+Corolla GLI
+year
+2016
+KMsDriven
+650040
+fuel
+Petrol
+registrationCity
+Karachi
+documants
+Original
+assembly
+Local
+transmission
+Manual
+features
+ABS
+condition
+New
+price
+160000
+latitude
+24.8937
+longitude
+67.2163
+city
+Karachi
+isFeatured
+false
+attachArtwork
+/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/1200px-2014*Toyota_Corolla*(ZRE172R)_Ascent_sedan_(2014-04-11).jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/download (1).jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/download.jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/images (1).jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/images.jpeg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/Next-Gen-Toyota-Corolla-Render-main.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/Screenshot_12.jpg,/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/toyota-corolla-cross-25.jpg
+
+GET
+find all car
+/findAllCar
+
+GET
+findCarById
+/findCarById/:mobileId
+Path Variables
+mobileId
+64e08036f9bd44e9091a4f7f
+
+GET
+find user car
+/findUserCar/64e0a6df1ae8ee56877dc6ea
+Authorization
+Bearer Token
+Token
+<token>
+Body
+raw (json)
+View More
+json
+{  
+ "title": "iphone 7",
+"description":"iphone 7 mint condition original peace leny khud ana hoga price almost final hai fuzool log door rahay",
+"category":"Electronics",
+"price":"12000",
+"status":"New",
+"location":"model colony karachi"
+}
+
+PUT
+updated car
+/updateCar/64db5431dc204e0181725054
+Authorization
+Bearer Token
+Token
+<token>
+Body
+raw (json)
+View More
+json
+{
+"title": "honda corolla",
+"description": "original engine best car in the world bohot pyr sy rakhi hh koi fuzool offer na dy log a kr khud dekhy..",
+"maker": "Honda",
+"model": "Civic VTi Oriel Prosmatec",
+"year": 1956,
+"KMsDriven": 6500400052
+}
+
+DELETE
+delete car
+/deleteCar/:productId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+productId
+64e08036f9bd44e9091a4f7f
+
+GET
+search feild car
+/car/:title
+Path Variables
+title
+ci
+
+GET
+find nearest car
+/findnearestcar
+Authorization
+Bearer Token
+Token
+<token>
+
+GET
+all product
+/findAllProduct
+Authorization
+Bearer Token
+Token
+<token>
+
+GET
+all category
+/finding
+Authorization
+Bearer Token
+Token
+<token>
+
+GET
+search in all items
+/search/:title
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+title
+i
+
+GET
+find nearest item
+/findnearest
+Authorization
+Bearer Token
+Token
+<token>
+
+GET
+Bike Finding
+/BikeFinding
+Authorization
+Bearer Token
+Token
+<token>
+
+GET
+find products User Id
+/findByUserId/:userId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+userId
+64e0a6df1ae8ee56877dc6ea
+
+==============ADD=================
+
+POST
+create ADD
+/createADD
+Authorization
+Bearer Token
+Token
+<token>
+Body
+form-data
+AD*placment
+lowwer-down
+attachArtwork
+/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/1200px-2014_Toyota_Corolla*(ZRE172R)_Ascent_sedan_(2014-04-11).jpg
+
+PUT
+update ADD
+/updateAD/:addId
+Authorization
+Bearer Token
+Token
+<token>
+Path Variables
+addId
+64e439c8953c596605b5e94c
+Body
+form-data
+AD_placment
+upper-Top
+attachArtwork
+/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/images (1).jpeg
+
+GET
+find Add
+/findAdd
+Authorization
+Bearer Token
+Token
+<token>
+Body
+form-data
+AD_placment
+upper-Top
+attachArtwork
+/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/images (1).jpeg
+
+GET
+find One Add
+/findOneAdd
+Authorization
+Bearer Token
+Token
+<token>
+Body
+form-data
+AD_placment
+upper-Top
+attachArtwork
+/C:/Users/Taha/Desktop/projects/olx-clone/pics/New folder/corolla/images (1).jpeg
