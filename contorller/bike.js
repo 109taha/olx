@@ -7,6 +7,7 @@ const { User } = require("../models/user");
 const { Product } = require("../models/product");
 const BikeMaker = require("../models/bike/bikeMaker");
 const BikeModel = require("../models/bike/bikeModel");
+const City = require("../models/cities");
 
 const createbikeAdd = async (req, res) => {
   //cloudinary
@@ -45,6 +46,7 @@ const createbikeAdd = async (req, res) => {
       price,
       latitude,
       longitude,
+      city,
       isFeatured,
       isFeaturedData,
     } = req.body;
@@ -59,7 +61,8 @@ const createbikeAdd = async (req, res) => {
       !condition ||
       !price ||
       !latitude ||
-      !longitude
+      !longitude ||
+      !city
     ) {
       return res.status(400).send({ message: "All fields are required" });
     }
@@ -69,6 +72,9 @@ const createbikeAdd = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
+    const cities = new City({
+      city,
+    });
     //bike maker
     const bikes = new BikeMaker({
       maker,
@@ -104,6 +110,7 @@ const createbikeAdd = async (req, res) => {
           parseFloat(req.body.latitude),
         ],
       },
+      city: cities,
       pics: attachArtwork.map((x) => x.url),
     });
 
@@ -137,6 +144,7 @@ const createbikeAdd = async (req, res) => {
       product_id: product._id,
       product_type: "Bike",
     });
+    await cities.save();
     await bikemodel.save();
     await bikes.save();
     await product.save();

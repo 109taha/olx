@@ -76,6 +76,11 @@ const CarSchema = new mongoose.Schema(
       type: { type: String, require: true },
       coordinates: [],
     },
+    city: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+      red: "City",
+    },
     isFeatured: {
       type: Boolean,
       default: false,

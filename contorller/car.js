@@ -9,6 +9,7 @@ const CarMaker = require("../models/car/carMaker");
 const CarModel = require("../models/car/carModel");
 const CarFeature = require("../models/car/carFeature");
 const CarRegCity = require("../models/car/carRegisterationCity");
+const City = require("../models/cities");
 
 const createCarAdd = async (req, res) => {
   const files = req.files;
@@ -53,6 +54,7 @@ const createCarAdd = async (req, res) => {
       price,
       latitude,
       longitude,
+      city,
     } = req.body;
     if (
       !title ||
@@ -70,7 +72,8 @@ const createCarAdd = async (req, res) => {
       !condition ||
       !price ||
       !latitude ||
-      !longitude
+      !longitude ||
+      !city
     ) {
       return res.status(400).send({ message: "All fields are required" });
     }
@@ -79,6 +82,9 @@ const createCarAdd = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
+    const cities = new City({
+      city,
+    });
     const carMakers = new CarMaker({
       maker,
     });
@@ -124,6 +130,7 @@ const createCarAdd = async (req, res) => {
           parseFloat(req.body.latitude),
         ],
       },
+      city: cities,
       pics: attachArtwork.map((x) => x.url),
     });
 
@@ -159,6 +166,7 @@ const createCarAdd = async (req, res) => {
       product_type: "Car",
     });
 
+    await cities.save();
     await carFeature.save();
     await registration.save();
     await carModel.save();

@@ -62,6 +62,11 @@ const MobilePhoneSchema = new mongoose.Schema(
       type: { type: String, require: true },
       coordinates: [],
     },
+    city: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+      ref: "City",
+    },
     isFeatured: {
       type: Boolean,
       default: false,

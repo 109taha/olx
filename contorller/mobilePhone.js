@@ -5,6 +5,7 @@ const cloudinary = require("../helper/cloudinary");
 const fs = require("fs");
 const { Product } = require("../models/product");
 const cron = require("node-cron");
+const City = require("../models/cities");
 
 const createMobileAdd = async (req, res) => {
   const files = req.files;
@@ -40,6 +41,7 @@ const createMobileAdd = async (req, res) => {
       isFeaturedData,
       latitude,
       longitude,
+      city,
     } = req.body;
     if (
       !title ||
@@ -47,7 +49,8 @@ const createMobileAdd = async (req, res) => {
       !brand ||
       !condition ||
       !latitude ||
-      !longitude
+      !longitude ||
+      !city
     ) {
       return res.status(400).send({ message: "All fields are required" });
     }
@@ -56,6 +59,9 @@ const createMobileAdd = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
 
+    const cities = new City({
+      city,
+    });
     const users = await User.findById(userId);
     const contact_Number = users.phone_number;
     const name = users.first_name + " " + users.last_name;
@@ -76,6 +82,7 @@ const createMobileAdd = async (req, res) => {
           parseFloat(req.body.latitude),
         ],
       },
+      city: cities,
       pics: attachArtwork.map((x) => x.url),
     });
 
@@ -111,6 +118,7 @@ const createMobileAdd = async (req, res) => {
       product_id: product._id,
       product_type: "Mobile",
     });
+    await cities.save();
     await products.save();
     await product.save();
 
