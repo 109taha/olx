@@ -15,6 +15,7 @@ const createUser = async (req, res) => {
       latitude,
       longitude,
       city,
+      role,
     } = req.body;
     if (
       !username ||
@@ -63,6 +64,7 @@ const createUser = async (req, res) => {
         ],
       },
       city: cities,
+      role,
     });
 
     await cities.save();

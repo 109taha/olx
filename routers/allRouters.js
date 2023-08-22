@@ -57,12 +57,34 @@ const {
   validBikeSchema,
 } = require("../middlewares/joi/category.js/categoryJoi");
 const validUserSchema = require("../middlewares/joi/userJoi");
+const {
+  createAD,
+  updateAd,
+  findAdd,
+  findOneAdd,
+} = require("../contorller/ADD");
 
 //users
 router.post("/createUser", validUserSchema, createUser);
 router.post("/loginUser", loginUser);
 router.get("/findUserById/:userId", findUserById);
 router.delete("/deleteUser/:userId", deleteUser);
+
+//add created
+router.post(
+  "/createADD",
+  verifyuser,
+  upload.array("attachArtwork", 2),
+  createAD
+);
+router.put(
+  "/updateAD/:addId",
+  verifyuser,
+  upload.array("attachArtwork", 2),
+  updateAd
+);
+router.get("/findAdd", findAdd);
+router.get("/findOneAdd", findOneAdd);
 
 //products
 router.get("/findAllProduct", findAllProduct);
