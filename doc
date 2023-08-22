@@ -4,7 +4,6 @@ olx clone
 POST
 register
 /createUser
-
 Body
 raw (json)
 json

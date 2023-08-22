@@ -155,7 +155,7 @@ const findAllMobiles = async (req, res) => {
 const findMobileById = async (req, res) => {
   try {
     const mobileId = req.params.mobileId;
-    const product = await Mobile.findById(mobileId);
+    const product = await Mobile.findById(mobileId).populate("city");
     if (!product) {
       return res.status(400).send({
         message: "No Mobile Found On That Id",

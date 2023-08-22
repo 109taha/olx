@@ -54,6 +54,8 @@ const MobilePhoneSchema = Joi.object({
     then: Joi.required(),
   }),
 
+  city: Joi.string().required(),
+
   isFeatured: Joi.boolean().required(),
 
   attachArtwork: Joi.string(),
@@ -152,6 +154,8 @@ const BikeSchema = Joi.object({
     is: undefined,
     then: Joi.required(),
   }),
+
+  city: Joi.string().required(),
 
   isFeatured: Joi.boolean().required(),
 
@@ -581,6 +585,8 @@ const CarSchema = Joi.object({
     is: undefined,
     then: Joi.required(),
   }),
+
+  city: Joi.string().required(),
 
   isFeatured: Joi.boolean().required(),
 

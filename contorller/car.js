@@ -210,7 +210,8 @@ const findCarById = async (req, res) => {
       .populate("model")
       .populate("maker")
       .populate("registrationCity")
-      .populate("features");
+      .populate("features")
+      .populate("city");
     if (!product) {
       return res.status(400).send({
         message: "no car on that Id",

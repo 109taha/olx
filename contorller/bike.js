@@ -185,8 +185,8 @@ const findBikeById = async (req, res) => {
     const bikeId = req.params.mobileId;
     const product = await Bike.findById(bikeId)
       .populate("model")
-      .populate("maker");
-    console.log(product);
+      .populate("maker")
+      .populate("city");
 
     if (!product) {
       return res.status(400).send({
@@ -323,6 +323,9 @@ const findnearestbike = async (req, res) => {
     const decryptedToken = jwt.verify(user, process.env.JWT_SECRET);
     const userId = decryptedToken.userId;
     const userData = await User.findById(userId);
+    if (!userData) {
+      return res.status(500).send({ message: "no user found" });
+    }
     // console.log(userData.location);
     const latitude = userData.location.coordinates[1]; // Latitude is at index 1
     const longitude = userData.location.coordinates[0];
